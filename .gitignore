@@ -23,3 +23,10 @@ go.work.sum
 
 # env file
 .env
+replica1.env
+replica2.env
+
+.idea
+
+data/**
+application/integration_tests/test_data/**

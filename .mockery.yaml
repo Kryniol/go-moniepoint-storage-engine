@@ -1,0 +1,5 @@
+dir: "mocks/{{.InterfaceDirRelative}}"
+with-expecter: false
+all: true
+packages:
+  github.com/Kryniol/go-moniepoint-storage-engine/domain:

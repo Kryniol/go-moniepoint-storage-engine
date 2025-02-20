@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  leader:
+    build: .
+    environment:
+      - REPLICATION_MODE=leader
+      - REPLICATION_REPLICA_HOSTS=http://follower1:8080,http://follower2:8080,http://follower3:8080,http://follower4:8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - leader_data:/app/data
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health-check" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - moniepoint_network
+
+  follower1:
+    build: .
+    environment:
+      - REPLICATION_MODE=follower
+      - REPLICATION_LEADER_HOST=http://leader:8080
+    ports:
+      - "8081:8080"
+    volumes:
+      - follower1_data:/app/data
+    depends_on:
+      leader:
+        condition: service_healthy
+    networks:
+      - moniepoint_network
+
+  follower2:
+    build: .
+    environment:
+      - REPLICATION_MODE=follower
+      - REPLICATION_LEADER_HOST=http://leader:8080
+    ports:
+      - "8082:8080"
+    volumes:
+      - follower2_data:/app/data
+    depends_on:
+      leader:
+        condition: service_healthy
+    networks:
+      - moniepoint_network
+
+  follower3:
+    build: .
+    environment:
+      - REPLICATION_MODE=follower
+      - REPLICATION_LEADER_HOST=http://leader:8080
+    ports:
+      - "8083:8080"
+    volumes:
+      - follower3_data:/app/data
+    depends_on:
+      leader:
+        condition: service_healthy
+    networks:
+      - moniepoint_network
+
+  follower4:
+    build: .
+    environment:
+      - REPLICATION_MODE=follower
+      - REPLICATION_LEADER_HOST=http://leader:8080
+    ports:
+      - "8084:8080"
+    volumes:
+      - follower4_data:/app/data
+    depends_on:
+      leader:
+        condition: service_healthy
+    networks:
+      - moniepoint_network
+
+volumes:
+  leader_data:
+  follower1_data:
+  follower2_data:
+  follower3_data:
+  follower4_data:
+
+networks:
+  moniepoint_network:
